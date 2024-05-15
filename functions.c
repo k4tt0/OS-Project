@@ -1,46 +1,6 @@
 #include <stdio.h>
 #include "functions.h"
 
-char *read_line(int fd) {
-    static char buffer[BUFFER_SIZE];
-    static int buffer_pos = 0;
-    static int buffer_end = 0;
-    char *line = malloc(BUFFER_SIZE);
-    if (!line) return NULL;
-    int line_pos = 0;
-
-    while (1) {
-        if (buffer_pos >= buffer_end) {
-            // Read more data into the buffer
-            int bytes_read = read(fd, buffer, BUFFER_SIZE);
-            if (bytes_read <= 0) {
-                // End of file or error
-                free(line);
-                return NULL;
-            }
-            buffer_end = bytes_read;
-            buffer_pos = 0;
-        }
-
-        // Copy characters to the line buffer until a newline or end of buffer
-        while (buffer_pos < buffer_end && buffer[buffer_pos] != '\n') {
-            line[line_pos++] = buffer[buffer_pos++];
-            if (line_pos >= BUFFER_SIZE - 1) {
-                // Line is too long for the buffer
-                free(line);
-                return NULL;
-            }
-        }
-
-        // If we found a newline, return the line
-        if (buffer_pos < buffer_end && buffer[buffer_pos] == '\n') {
-            line[line_pos] = '\0'; // Null-terminate the line
-            buffer_pos++; // Skip the newline for the next call
-            return line;
-        }
-    }
-}
-
 char *getEntryPermissions(struct stat fileStat, char *permissions_buffer) {   
 
     sprintf(permissions_buffer, "%s%s%s%s%s%s%s%s%s%s",
