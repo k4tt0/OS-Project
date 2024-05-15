@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
     int files_count = 0;
 
     for (int i  = 1; i < argc; i++) {
-        getSnapshotForGivenDir("./test", &files_count, &snapshots);
+        getSnapshotForGivenDir(argv[i], &files_count, &snapshots);
     }
 
     return 0;
